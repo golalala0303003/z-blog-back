@@ -1,0 +1,81 @@
+package com.zengrui.zblog.server.service.impl;
+
+
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
+import com.zengrui.zblog.common.properties.AliOssProperties;
+import com.zengrui.zblog.pojo.dto.WriteBlogDTO;
+import com.zengrui.zblog.pojo.entity.Blog;
+import com.zengrui.zblog.server.mapper.BlogMapper;
+import com.zengrui.zblog.server.service.BlogService;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+@Service
+@Slf4j
+public class BlogServiceImpl implements BlogService {
+    @Autowired
+    private AliOssProperties aliOssProperties;
+
+    @Autowired
+    private BlogMapper blogMapper;
+
+    @Override
+    public String uploadToOSS(MultipartFile file) {
+        log.info("已经收到图片");
+        //创建 OSS 客户端
+        OSS ossClient = new OSSClientBuilder().build(
+                aliOssProperties.getEndpoint(),
+                aliOssProperties.getAccessKeyId(),
+                aliOssProperties.getAccessKeySecret()
+        );
+
+        try {
+            //获取原始文件名和后缀
+            String originalFilename = file.getOriginalFilename();
+            String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
+
+            //构造唯一文件名
+            String fileName = UUID.randomUUID().toString() + suffix;
+
+            //拼接完整路径
+            String filePath = aliOssProperties.getDir() + fileName;
+
+            //上传文件
+            ossClient.putObject(
+                    aliOssProperties.getBucketName(),
+                    filePath,
+                    file.getInputStream()
+            );
+
+            //返回可访问的 URL
+            return "https://" + aliOssProperties.getBucketName() + "." + aliOssProperties.getEndpoint() + "/" + filePath;
+        } catch (IOException e) {
+            throw new RuntimeException("文件上传失败", e);
+        } finally {
+            ossClient.shutdown();
+        }
+    }
+
+    @Override
+    public void writeBlog(WriteBlogDTO writeBlogDTO) {
+        log.info(writeBlogDTO.toString());
+        LocalDateTime now = LocalDateTime.now();
+        Blog blog = Blog.builder()
+                .title(writeBlogDTO.getTitle())
+                .cover(writeBlogDTO.getCover())
+                .content(writeBlogDTO.getContent())
+                .authorId(writeBlogDTO.getAuthorId())
+                .createTime(now)
+                .updateTime(now)
+                .build();
+        blogMapper.insert(blog);
+    }
+}
