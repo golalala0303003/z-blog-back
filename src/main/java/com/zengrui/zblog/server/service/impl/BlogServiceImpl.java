@@ -4,8 +4,10 @@ package com.zengrui.zblog.server.service.impl;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.zengrui.zblog.common.properties.AliOssProperties;
+import com.zengrui.zblog.pojo.dto.BlogListDTO;
 import com.zengrui.zblog.pojo.dto.WriteBlogDTO;
 import com.zengrui.zblog.pojo.entity.Blog;
+import com.zengrui.zblog.pojo.vo.BlogListVO;
 import com.zengrui.zblog.pojo.vo.ReadBlogVO;
 import com.zengrui.zblog.server.mapper.BlogMapper;
 import com.zengrui.zblog.server.service.BlogService;
@@ -17,6 +19,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -83,5 +88,22 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public ReadBlogVO readBlog(Long id) {
         return blogMapper.getBlogByBlogId(id);
+    }
+
+    @Override
+    public List<BlogListVO> blogList(BlogListDTO blogListDTO) {
+        //TODO 处理推荐 就是所有都让前端拉取回去
+        if(Objects.equals(blogListDTO.getType(), "recommend")){
+            return blogMapper.getAllBlogs();
+        }
+
+        //TODO 处理我的 就是author_id = id的
+        if(Objects.equals(blogListDTO.getType(), "mine")){
+            //List<BlogListVO> blogListVOS = blogMapper.getMineBlogs(blogListDTO.getId());
+            return null;
+        }
+
+        //TODO 关注。。。。
+        return null;
     }
 }

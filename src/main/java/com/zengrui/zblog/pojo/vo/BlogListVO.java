@@ -1,15 +1,19 @@
 package com.zengrui.zblog.pojo.vo;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
 
 @Data
-public class ReadBlogVO {
+@Builder
+public class BlogListVO {
+    private Long id;
     private String title;
-    private String content;
+    private String contentAbstract;
     private String cover;
     private String author;
-    private String avatar;
+    private Integer likeCount;
+    private Integer commentCount;
     private LocalDateTime createTime;
 }
