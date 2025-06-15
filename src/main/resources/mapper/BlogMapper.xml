@@ -5,4 +5,17 @@
     <insert id="insert">
         insert into blog(title,content,cover,author_id,create_time,update_time) values (#{title},#{content},#{cover},#{authorId},#{createTime},#{updateTime})
     </insert>
+
+    <select id="getBlogByBlogId" resultType="com.zengrui.zblog.pojo.vo.ReadBlogVO">
+        SELECT
+            b.title,
+            b.content,
+            b.cover,
+            u.id AS author,
+            u.avatar,
+            b.create_time
+        FROM blog b
+                 JOIN user u ON b.author_id = u.id
+        WHERE b.id = #{id}
+    </select>
 </mapper>

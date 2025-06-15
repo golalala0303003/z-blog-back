@@ -6,6 +6,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.zengrui.zblog.common.properties.AliOssProperties;
 import com.zengrui.zblog.pojo.dto.WriteBlogDTO;
 import com.zengrui.zblog.pojo.entity.Blog;
+import com.zengrui.zblog.pojo.vo.ReadBlogVO;
 import com.zengrui.zblog.server.mapper.BlogMapper;
 import com.zengrui.zblog.server.service.BlogService;
 
@@ -77,5 +78,10 @@ public class BlogServiceImpl implements BlogService {
                 .updateTime(now)
                 .build();
         blogMapper.insert(blog);
+    }
+
+    @Override
+    public ReadBlogVO readBlog(Long id) {
+        return blogMapper.getBlogByBlogId(id);
     }
 }

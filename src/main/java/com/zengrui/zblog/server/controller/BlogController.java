@@ -4,6 +4,7 @@ package com.zengrui.zblog.server.controller;
 import com.zengrui.zblog.common.exception.BusinessException;
 import com.zengrui.zblog.common.result.Result;
 import com.zengrui.zblog.pojo.dto.WriteBlogDTO;
+import com.zengrui.zblog.pojo.vo.ReadBlogVO;
 import com.zengrui.zblog.server.service.BlogService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,5 +32,11 @@ public class BlogController {
     public Result writeBlog(@RequestBody WriteBlogDTO writeBlogDTO){
         blogService.writeBlog(writeBlogDTO);
         return Result.success();
+    }
+
+    @GetMapping("/{id}")
+    public Result<ReadBlogVO> readBlog(@PathVariable Long id){
+        ReadBlogVO readBlogVO = blogService.readBlog(id);
+        return Result.success(readBlogVO);
     }
 }
