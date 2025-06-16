@@ -14,4 +14,6 @@ public interface BlogMapper {
     ReadBlogVO getBlogByBlogId(Long id);
 
     List<BlogListVO> getAllBlogs();
+
+    List<BlogListVO> getMineBlogs(Long id);
 }

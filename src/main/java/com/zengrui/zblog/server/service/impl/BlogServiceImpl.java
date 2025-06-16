@@ -92,15 +92,14 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public List<BlogListVO> blogList(BlogListDTO blogListDTO) {
-        //TODO 处理推荐 就是所有都让前端拉取回去
+        //处理推荐 就是所有都让前端拉取回去
         if(Objects.equals(blogListDTO.getType(), "recommend")){
             return blogMapper.getAllBlogs();
         }
 
         //TODO 处理我的 就是author_id = id的
         if(Objects.equals(blogListDTO.getType(), "mine")){
-            //List<BlogListVO> blogListVOS = blogMapper.getMineBlogs(blogListDTO.getId());
-            return null;
+            return blogMapper.getMineBlogs(blogListDTO.getId());
         }
 
         //TODO 关注。。。。

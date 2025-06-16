@@ -33,4 +33,20 @@
                  JOIN user u ON b.author_id = u.id
         ORDER BY b.create_time DESC
     </select>
+
+    <select id="getMineBlogs" resultType="com.zengrui.zblog.pojo.vo.BlogListVO">
+        SELECT
+            b.id,
+            b.title,
+            LEFT(b.content, 100) AS content_abstract,
+            b.cover,
+            u.username AS author,
+            b.like_count,
+            b.comment_count,
+            b.create_time
+        FROM blog b
+                 JOIN user u ON b.author_id = u.id
+        WHERE b.author_id = #{id}
+        ORDER BY b.create_time DESC
+    </select>
 </mapper>
