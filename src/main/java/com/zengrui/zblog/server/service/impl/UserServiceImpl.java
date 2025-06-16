@@ -4,8 +4,10 @@ import com.zengrui.zblog.common.exception.BusinessException;
 import com.zengrui.zblog.common.result.Result;
 import com.zengrui.zblog.pojo.dto.UserLoginDTO;
 import com.zengrui.zblog.pojo.dto.UserRegisterDTO;
+import com.zengrui.zblog.pojo.dto.UserUpdateDTO;
 import com.zengrui.zblog.pojo.entity.User;
 import com.zengrui.zblog.pojo.vo.UserLoginVO;
+import com.zengrui.zblog.pojo.vo.UserViewVO;
 import com.zengrui.zblog.server.mapper.UserMapper;
 import com.zengrui.zblog.server.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -77,5 +79,15 @@ public class UserServiceImpl implements UserService {
                 .avatar(userOut.getAvatar())
                 .token(token)
                 .build();
+    }
+
+    @Override
+    public UserViewVO view(Long userId) {
+        return userMapper.getUserViewByUserId(userId);
+    }
+
+    @Override
+    public void updateUserInfo(UserUpdateDTO userUpdateDTO) {
+        userMapper.updateUserInfo(userUpdateDTO);
     }
 }

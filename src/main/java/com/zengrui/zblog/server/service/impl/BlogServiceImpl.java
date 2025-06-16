@@ -97,7 +97,6 @@ public class BlogServiceImpl implements BlogService {
             return blogMapper.getAllBlogs();
         }
 
-        //TODO 处理我的 就是author_id = id的
         if(Objects.equals(blogListDTO.getType(), "mine")){
             return blogMapper.getMineBlogs(blogListDTO.getId());
         }

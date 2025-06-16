@@ -14,5 +14,21 @@
     <select id="getUserByUserNameAndPassword" resultType="com.zengrui.zblog.pojo.entity.User">
         select * from user where username = #{username} and password = #{password}
     </select>
+    <update id="updateUserInfo">
+        UPDATE `user`
+        <set>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            update_time = NOW()
+        </set>
+        WHERE id = #{id}
+    </update>
 
 </mapper>
