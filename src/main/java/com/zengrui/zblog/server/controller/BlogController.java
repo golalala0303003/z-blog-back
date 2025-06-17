@@ -3,6 +3,7 @@ package com.zengrui.zblog.server.controller;
 
 import com.zengrui.zblog.common.exception.BusinessException;
 import com.zengrui.zblog.common.result.Result;
+import com.zengrui.zblog.pojo.dto.BlogLikeDTO;
 import com.zengrui.zblog.pojo.dto.BlogListDTO;
 import com.zengrui.zblog.pojo.dto.WriteBlogDTO;
 import com.zengrui.zblog.pojo.vo.BlogListVO;
@@ -49,5 +50,12 @@ public class BlogController {
         log.info(blogListDTO.toString());
         List<BlogListVO> listVOS = blogService.blogList(blogListDTO);
         return Result.success(listVOS);
+    }
+
+    @PostMapping("/like")
+    public Result like(@RequestBody BlogLikeDTO blogLikeDTO){
+        log.info(blogLikeDTO.toString());
+        blogService.like(blogLikeDTO);
+        return Result.success();
     }
 }

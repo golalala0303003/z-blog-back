@@ -4,6 +4,7 @@ package com.zengrui.zblog.server.service.impl;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
 import com.zengrui.zblog.common.properties.AliOssProperties;
+import com.zengrui.zblog.pojo.dto.BlogLikeDTO;
 import com.zengrui.zblog.pojo.dto.BlogListDTO;
 import com.zengrui.zblog.pojo.dto.WriteBlogDTO;
 import com.zengrui.zblog.pojo.entity.Blog;
@@ -101,7 +102,11 @@ public class BlogServiceImpl implements BlogService {
             return blogMapper.getMineBlogs(blogListDTO.getId());
         }
 
-        //TODO 关注。。。。
         return null;
+    }
+
+    @Override
+    public void like(BlogLikeDTO blogLikeDTO) {
+        blogMapper.addLikeCount(blogLikeDTO);
     }
 }

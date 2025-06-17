@@ -1,5 +1,6 @@
 package com.zengrui.zblog.server.mapper;
 
+import com.zengrui.zblog.pojo.dto.BlogLikeDTO;
 import com.zengrui.zblog.pojo.entity.Blog;
 import com.zengrui.zblog.pojo.vo.BlogListVO;
 import com.zengrui.zblog.pojo.vo.ReadBlogVO;
@@ -20,4 +21,7 @@ public interface BlogMapper {
 
     @Update("update blog set comment_count = comment_count + 1 where id = #{blogId}")
     void addComment(Long blogId);
+
+    @Update("update blog set like_count = like_count + 1 where id = #{blogId}")
+    void addLikeCount(BlogLikeDTO blogLikeDTO);
 }
