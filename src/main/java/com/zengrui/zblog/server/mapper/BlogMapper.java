@@ -24,4 +24,7 @@ public interface BlogMapper {
 
     @Update("update blog set like_count = like_count + 1 where id = #{blogId}")
     void addLikeCount(BlogLikeDTO blogLikeDTO);
+
+    @Update("update blog set like_count = like_count - 1 where id = #{blogId}")
+    void subLikeCount(BlogLikeDTO blogLikeDTO);
 }

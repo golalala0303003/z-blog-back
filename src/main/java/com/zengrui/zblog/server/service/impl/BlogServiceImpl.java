@@ -45,24 +45,19 @@ public class BlogServiceImpl implements BlogService {
         );
 
         try {
-            //获取原始文件名和后缀
+            //获取原始文件名后缀
             String originalFilename = file.getOriginalFilename();
             String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
-
             //构造唯一文件名
             String fileName = UUID.randomUUID().toString() + suffix;
-
-            //拼接完整路径
+            //拼接路径
             String filePath = aliOssProperties.getDir() + fileName;
-
-            //上传文件
             ossClient.putObject(
                     aliOssProperties.getBucketName(),
                     filePath,
                     file.getInputStream()
             );
-
-            //返回可访问的 URL
+            //返回URL
             return "https://" + aliOssProperties.getBucketName() + "." + aliOssProperties.getEndpoint() + "/" + filePath;
         } catch (IOException e) {
             throw new RuntimeException("文件上传失败", e);
@@ -107,6 +102,11 @@ public class BlogServiceImpl implements BlogService {
 
     @Override
     public void like(BlogLikeDTO blogLikeDTO) {
-        blogMapper.addLikeCount(blogLikeDTO);
+        if(blogLikeDTO.getLike()) {
+            blogMapper.addLikeCount(blogLikeDTO);
+        }else{
+            blogMapper.subLikeCount(blogLikeDTO);
+        }
+
     }
 }
