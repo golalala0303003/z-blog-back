@@ -5,6 +5,7 @@ import com.zengrui.zblog.pojo.dto.UpdateBlogDTO;
 import com.zengrui.zblog.pojo.entity.Blog;
 import com.zengrui.zblog.pojo.vo.BlogListVO;
 import com.zengrui.zblog.pojo.vo.ReadBlogVO;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Update;
 
@@ -30,4 +31,7 @@ public interface BlogMapper {
     void subLikeCount(BlogLikeDTO blogLikeDTO);
 
     void update(UpdateBlogDTO updateBlogDTO);
+
+    @Delete("delete from blog where id = #{id}")
+    void deleteById(Long id);
 }
