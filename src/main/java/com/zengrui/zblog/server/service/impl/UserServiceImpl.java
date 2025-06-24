@@ -61,8 +61,8 @@ public class UserServiceImpl implements UserService {
         if (!isUserPasswordCorrect) {
             throw new BusinessException("密码错误");
         }
-        //TODO 生成jwt令牌
-        String token = "114514暂时没有校验";
+        //TODO 生成jwt令牌 先用用户名过度
+        String token = "token"+userLoginDTO.getUsername();
         /*Map<String,Object> claims = new HashMap<>();
         Long id = userMapper.getUserIdByUserNameAndPassword(user);
         claims.put("id",id);
