@@ -2,6 +2,7 @@ package com.zengrui.zblog.server.service;
 
 import com.zengrui.zblog.pojo.dto.BlogLikeDTO;
 import com.zengrui.zblog.pojo.dto.BlogListDTO;
+import com.zengrui.zblog.pojo.dto.UpdateBlogDTO;
 import com.zengrui.zblog.pojo.dto.WriteBlogDTO;
 import com.zengrui.zblog.pojo.vo.BlogListVO;
 import com.zengrui.zblog.pojo.vo.ReadBlogVO;
@@ -19,4 +20,8 @@ public interface BlogService {
     List<BlogListVO> blogList(BlogListDTO blogListDTO);
 
     void like(BlogLikeDTO blogLikeDTO);
+
+    void delete(Long id);
+
+    void update(UpdateBlogDTO updateBlogDTO);
 }

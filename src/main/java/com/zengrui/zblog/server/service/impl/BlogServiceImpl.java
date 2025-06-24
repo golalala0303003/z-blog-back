@@ -6,6 +6,7 @@ import com.aliyun.oss.OSSClientBuilder;
 import com.zengrui.zblog.common.properties.AliOssProperties;
 import com.zengrui.zblog.pojo.dto.BlogLikeDTO;
 import com.zengrui.zblog.pojo.dto.BlogListDTO;
+import com.zengrui.zblog.pojo.dto.UpdateBlogDTO;
 import com.zengrui.zblog.pojo.dto.WriteBlogDTO;
 import com.zengrui.zblog.pojo.entity.Blog;
 import com.zengrui.zblog.pojo.vo.BlogListVO;
@@ -108,5 +109,15 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public void like(BlogLikeDTO blogLikeDTO) {
         blogMapper.addLikeCount(blogLikeDTO);
+    }
+
+    @Override
+    public void delete(Long id) {
+        blogMapper.deleteById(id);
+    }
+
+    @Override
+    public void update(UpdateBlogDTO updateBlogDTO) {
+        blogMapper.update(updateBlogDTO);
     }
 }

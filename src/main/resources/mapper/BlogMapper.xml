@@ -49,4 +49,20 @@
         WHERE b.author_id = #{id}
         ORDER BY b.create_time DESC
     </select>
+
+    <update id="update">
+        UPDATE blog
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="cover != null and cover != ''">
+                cover = #{cover},
+            </if>
+        </set>
+        WHERE id = #{id} AND author_id = #{authorId}
+    </update>
 </mapper>

@@ -5,6 +5,7 @@ import com.zengrui.zblog.common.exception.BusinessException;
 import com.zengrui.zblog.common.result.Result;
 import com.zengrui.zblog.pojo.dto.BlogLikeDTO;
 import com.zengrui.zblog.pojo.dto.BlogListDTO;
+import com.zengrui.zblog.pojo.dto.UpdateBlogDTO;
 import com.zengrui.zblog.pojo.dto.WriteBlogDTO;
 import com.zengrui.zblog.pojo.vo.BlogListVO;
 import com.zengrui.zblog.pojo.vo.ReadBlogVO;
@@ -58,4 +59,19 @@ public class BlogController {
         blogService.like(blogLikeDTO);
         return Result.success();
     }
+
+    @DeleteMapping("/delete/{id}")
+    public Result delete(@PathVariable Long id){
+        log.info("删除博客"+id);
+        blogService.delete(id);
+        return Result.success();
+    }
+
+    @PutMapping("/update")
+    public Result update(@RequestBody UpdateBlogDTO updateBlogDTO){
+        log.info(updateBlogDTO.toString());
+        blogService.update(updateBlogDTO);
+        return Result.success();
+    }
+
 }
