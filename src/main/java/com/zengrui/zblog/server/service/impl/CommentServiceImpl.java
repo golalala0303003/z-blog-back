@@ -10,6 +10,7 @@ import com.zengrui.zblog.server.service.BlogService;
 import com.zengrui.zblog.server.service.CommentService;
 import com.zengrui.zblog.server.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -41,6 +42,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
+    @Cacheable(value = "commentCache",key = "#id")
     public List<CommentListVO> list(Long id) {
         return commentMapper.list(id);
     }

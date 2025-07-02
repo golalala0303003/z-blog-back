@@ -16,6 +16,8 @@ import com.zengrui.zblog.server.service.BlogService;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,6 +36,9 @@ public class BlogServiceImpl implements BlogService {
 
     @Autowired
     private BlogMapper blogMapper;
+
+    @Autowired
+    private RedisTemplate<String,Object> redisTemplate;
 
     @Override
     public String uploadToOSS(MultipartFile file) {
@@ -83,8 +88,20 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
+    //@Cacheable(value = "blogCache",key = "#id")
     public ReadBlogVO readBlog(Long id) {
-        return blogMapper.getBlogByBlogId(id);
+        String cacheKey = "blogCache::" + id;
+        ReadBlogVO cached = (ReadBlogVO) redisTemplate.opsForValue().get(cacheKey);
+        if(cached != null) {
+            log.debug("缓存命中");
+            return cached;
+        }
+        log.debug("缓存未命中");
+        ReadBlogVO readBlogVO = blogMapper.getBlogByBlogId(id);
+        if(readBlogVO != null){
+            redisTemplate.opsForValue().set(cacheKey, readBlogVO);
+        }
+        return readBlogVO;
     }
 
     @Override
