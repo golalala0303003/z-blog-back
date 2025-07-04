@@ -21,4 +21,9 @@ public interface UserMapper {
     UserViewVO getUserViewByUserId(Long userId);
 
     void updateUserInfo(UserUpdateDTO userUpdateDTO);
+
+    @Select("select id from user where username = #{username} and password = #{password}")
+    Long getUserIdByUserNameAndPassword(User user);
+
+    boolean verifyUser(Object id, Object username);
 }

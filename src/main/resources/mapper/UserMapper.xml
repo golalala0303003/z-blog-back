@@ -11,6 +11,9 @@
     <select id="isUserPasswordCorrect" resultType="boolean">
         select count(1) > 0 from user where username = #{username} and password = #{password}
     </select>
+    <select id="verifyUser" resultType="boolean">
+        select  count(1) > 0 from user where id = #{id} and username = #{username}
+    </select>
     <select id="getUserByUserNameAndPassword" resultType="com.zengrui.zblog.pojo.entity.User">
         select * from user where username = #{username} and password = #{password}
     </select>

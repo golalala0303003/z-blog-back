@@ -53,7 +53,10 @@ public class BlogServiceImpl implements BlogService {
         try {
             //获取原始文件名后缀
             String originalFilename = file.getOriginalFilename();
-            String suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String suffix = null;
+            if (originalFilename != null) {
+                suffix = originalFilename.substring(originalFilename.lastIndexOf("."));
+            }
             //构造唯一文件名
             String fileName = UUID.randomUUID().toString() + suffix;
             //拼接路径

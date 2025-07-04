@@ -1,17 +1,22 @@
 package com.zengrui.zblog.server.service.impl;
 
 import com.zengrui.zblog.common.exception.BusinessException;
-import com.zengrui.zblog.common.result.Result;
+import com.zengrui.zblog.common.properties.JwtProperties;
+
+import com.zengrui.zblog.common.utils.JwtUtil;
 import com.zengrui.zblog.pojo.dto.UserLoginDTO;
 import com.zengrui.zblog.pojo.dto.UserRegisterDTO;
 import com.zengrui.zblog.pojo.dto.UserUpdateDTO;
 import com.zengrui.zblog.pojo.entity.User;
+import com.zengrui.zblog.pojo.vo.ReadBlogVO;
 import com.zengrui.zblog.pojo.vo.UserLoginVO;
 import com.zengrui.zblog.pojo.vo.UserViewVO;
 import com.zengrui.zblog.server.mapper.UserMapper;
 import com.zengrui.zblog.server.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,9 +29,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private JwtProperties jwtProperties;
+
+    @Autowired
+    private StringRedisTemplate stringRedisTemplate;
+
     @Override
     public void register(UserRegisterDTO userRegisterDTO) {
-        log.info("开始注册"+userRegisterDTO.toString());
+        log.debug("开始注册{}",userRegisterDTO.toString());
 
         boolean isUserNameExists = userMapper.isUserNameExists(userRegisterDTO.getUsername());
         if (isUserNameExists) {
@@ -52,6 +63,7 @@ public class UserServiceImpl implements UserService {
                 .username(userLoginDTO.getUsername())
                 .password(userLoginDTO.getPassword())
                 .build();
+
         //全局异常处理
         Boolean isUserNameExists = userMapper.isUserNameExists(userLoginDTO.getUsername());
         if (!isUserNameExists) {
@@ -61,17 +73,24 @@ public class UserServiceImpl implements UserService {
         if (!isUserPasswordCorrect) {
             throw new BusinessException("密码错误");
         }
-        //TODO 生成jwt令牌 先用用户名过度
-        String token = "token"+userLoginDTO.getUsername();
-        /*Map<String,Object> claims = new HashMap<>();
+
+        //生成jwt
+        Map<String,Object> claims = new HashMap<>();
         Long id = userMapper.getUserIdByUserNameAndPassword(user);
         claims.put("id",id);
-        claims.put("userName", userLoginDTO.getUserName());
-        claims.put("password", userLoginDTO.getPassword());
-        String token = JwtUtil.createJwt(jwtProperties.getSecret(),claims,jwtProperties.getTtl());
-        log.info(("当前用户的token是"+token));*/
+        claims.put("username", userLoginDTO.getUsername());
+        String token = JwtUtil.createJwt(jwtProperties.getSecretKey(),jwtProperties.getExpirationTime(),claims);
+        log.info("已经为id为{}的用户生成了token{}",id,token);
 
-        //构造loginVO
+        //redis存储
+        String cacheKey = "userToken::" + id;
+        String usernameGetFromRedis = stringRedisTemplate.opsForValue().get(cacheKey);
+        if(usernameGetFromRedis == null){
+            log.info("查询token缓存未命中");
+            stringRedisTemplate.opsForValue().set(cacheKey, userLoginDTO.getUsername());
+        }
+        log.info("查询token缓存命中");
+
         User userOut = userMapper.getUserByUserNameAndPassword(user);
         return UserLoginVO.builder()
                 .id(userOut.getId())
